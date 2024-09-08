@@ -4,8 +4,9 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "clean": "git clean -xdf .cache .expo .turbo android ios node_modules",
+    "clean": "git clean -xdf .expo android ios node_modules",
     "dev": "expo run:ios",
+    "build": "expo run:ios",
     "build:production": "eas build -p ios -e production --local",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",

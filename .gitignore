@@ -49,9 +49,6 @@ yarn-error.log*
 dist/
 .cache
 
-# turbo
-.turbo
-
 # sst
 .sst
 

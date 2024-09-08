@@ -15,18 +15,18 @@ import LogIn from "./_components/logIn";
 import SideNav from "./_components/sideNav";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    env.VERCEL_ENV === "production"
-      ? "https://turbo.t3.gg"
-      : "http://localhost:3000",
-  ),
-  title: "Create T3 Turbo",
+  // metadataBase: new URL(
+  //   env.VERCEL_ENV === "production"
+  //     ? "https://t3.gg"
+  //     : "http://localhost:3000",
+  // ),
+  title: "Create T3",
   description: "Simple monorepo with shared backend for web & mobile apps",
   // openGraph: {
-  //   title: "Create T3 Turbo",
+  //   title: "Create T3",
   //   description: "Simple monorepo with shared backend for web & mobile apps",
-  //   url: "https://create-t3-turbo.vercel.app",
-  //   siteName: "Create T3 Turbo",
+  //   url: "https://create-t3.vercel.app",
+  //   siteName: "Create T3",
   // },
   // twitter: {
   //   card: "summary_large_image",
@@ -41,11 +41,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans text-foreground antialiased",
+          "bg-background text-foreground min-h-screen font-sans antialiased",
           GeistSans.variable,
           GeistMono.variable,
-        )}
-      >
+        )}>
         {session ? <App>{props.children}</App> : <LogIn />}
       </body>
     </html>
