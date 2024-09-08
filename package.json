@@ -24,16 +24,14 @@
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add"
   },
-  "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
-    "@turbo/gen": "^2.0.13",
-    "@types/aws-lambda": "8.10.145",
-    "prettier": "catalog:",
-    "turbo": "^2.1.1",
-    "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config",
   "dependencies": {
     "sst": "3.0.106"
-  }
+  },
+  "devDependencies": {
+    "@acme/prettier-config": "workspace:*",
+    "@types/aws-lambda": "8.10.145",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/prettier-config"
 }
