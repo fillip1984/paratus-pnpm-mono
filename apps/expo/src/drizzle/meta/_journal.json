@@ -1,0 +1,34 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1715524838400,
+      "tag": "0000_exotic_cobalt_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1715560699953,
+      "tag": "0001_true_overlord",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1724001091169,
+      "tag": "0002_misty_goliath",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1724694495829,
+      "tag": "0003_misty_tigra",
+      "breakpoints": true
+    }
+  ]
+}
