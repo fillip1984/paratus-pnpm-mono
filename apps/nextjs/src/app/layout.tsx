@@ -15,13 +15,13 @@ import LogIn from "./_components/logIn";
 import SideNav from "./_components/sideNav";
 
 export const metadata: Metadata = {
-  // metadataBase: new URL(
-  //   env.VERCEL_ENV === "production"
-  //     ? "https://t3.gg"
-  //     : "http://localhost:3000",
-  // ),
-  title: "Create T3",
-  description: "Simple monorepo with shared backend for web & mobile apps",
+  metadataBase: new URL(
+    env.NODE_ENV === "production"
+      ? "https://paratus.illizen.com"
+      : "http://localhost:3000",
+  ),
+  title: "Paratus",
+  description: "Habit tracking web app",
   // openGraph: {
   //   title: "Create T3",
   //   description: "Simple monorepo with shared backend for web & mobile apps",

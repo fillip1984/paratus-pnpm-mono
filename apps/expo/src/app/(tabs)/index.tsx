@@ -10,6 +10,7 @@ import { Link, router, useFocusEffect } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FlashList } from "@shopify/flash-list";
+import clsx from "clsx";
 import {
   addDays,
   addWeeks,
@@ -19,6 +20,8 @@ import {
   format,
   interval,
   isBefore,
+  isFuture,
+  isPast,
   isSameDay,
   isToday,
   isTomorrow,
@@ -375,9 +378,9 @@ const Week = ({
   setSelectedDate: Dispatch<SetStateAction<Date>>;
   setJumpToDate: Dispatch<SetStateAction<Date | null>>;
 }) => {
-  // const isSelected = (d: Date) => {
-  //   return isSameDay(d, selectedDate);
-  // };
+  const isSelected = (d: Date) => {
+    return isSameDay(d, selectedDate);
+  };
 
   return (
     <View className="flex w-screen flex-row">
@@ -389,19 +392,17 @@ const Week = ({
               setSelectedDate(d);
               setJumpToDate(d);
             }}
-            // className={classNames({
-            //   "bg-red-500 flex h-10 w-10 items-center justify-center rounded-full":
-            //     isSelected(d),
-            //   "flex h-10 w-10 items-center justify-center": true,
-            // })}
-          >
+            className={clsx({
+              "bg-red-500 flex h-10 w-10 items-center justify-center rounded-full":
+                isSelected(d),
+              "flex h-10 w-10 items-center justify-center": true,
+            })}>
             <Text
-            // className={classNames("text-2xl", {
-            //   "text-red-500": isToday(d) && !isSelected(d),
-            //   "text-white": isFuture(d) || isSelected(d),
-            //   "text-gray-600": isPast(d) && !isToday(d),
-            // })}
-            >
+              className={clsx("text-2xl", {
+                "text-red-500": isToday(d) && !isSelected(d),
+                "text-white": isFuture(d) || isSelected(d),
+                "text-gray-600": isPast(d) && !isToday(d),
+              })}>
               {d.getDate()}
             </Text>
           </Pressable>

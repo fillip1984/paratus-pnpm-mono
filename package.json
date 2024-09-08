@@ -7,28 +7,29 @@
   "packageManager": "pnpm@9.7.1",
   "scripts": {
     "build": "pnpm -r build",
-    "build:nextjs": "pnpm --filter nextjs build",
-    "dev:nextjs": "pnpm --filter nextjs dev",
-    "packages": "pnpm --filter packages",
-    "deploy": "pnpx sst deploy --stage production",
     "clean": "git clean -xdf",
     "clean:workspaces": "pnpm run clean",
     "db:generate": "pnpm -filter=@acme/db postinstall",
     "db:push": "pnpm -filter=@acme/db push",
     "db:studio": "pnpm -filter=@acme/db studio",
-    "dev": "pnpm watch dev",
+    "dev": "pnpm -r dev",
     "dev:next": "pnpm watch dev -filter=@acme/nextjs...",
+    "dev:nextjs": "pnpm --filter nextjs dev",
     "format": "pnpm run format --continue -- --cache --cache-location .cache/.prettiercache",
     "format:fix": "pnpm run format --continue -- --write --cache --cache-location .cache/.prettiercache",
     "lint": "pnpm run lint --continue -- --cache --cache-location .cache/.eslintcache",
     "lint:fix": "pnpm run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
+    "apps": "pnpm --filter apps",
+    "packages": "pnpm --filter packages",
     "postinstall": "pnpm lint:ws",
     "typecheck": "pnpm run typecheck",
-    "ui-add": "pnpm run ui-add"
+    "ui-add": "pnpm run ui-add",
+    "prod:db:push": "dotenv -e .env.production -- npx prisma db push",
+    "prod:deploy": "dotenv -e .env.production -- pnpm -r build && pnpx sst deploy --stage production"
   },
   "dependencies": {
-    "sst": "3.0.106"
+    "sst": "3.0.122"
   },
   "devDependencies": {
     "@acme/prettier-config": "workspace:*",

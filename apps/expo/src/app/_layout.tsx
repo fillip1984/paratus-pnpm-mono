@@ -41,6 +41,7 @@ const requestAndAuthenticateViaBiometrics = async () => {
 
 export default function RootLayoutNav() {
   const [loaded, setLoaded] = useState(false);
+  const [biometricAuthenticated, setBiometricAuthenticated] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [notificationsPermitted, setNotificationsPermitted] =
     useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
@@ -57,8 +58,8 @@ export default function RootLayoutNav() {
       setNotificationsPermitted(notificationPermStatus);
 
       // request to use biometric hardware for authentication
-      // const biometricsResult = await requestAndAuthenticateViaBiometrics();
-      // setAuthenticated(biometricsResult);
+      const biometricsResult = await requestAndAuthenticateViaBiometrics();
+      setBiometricAuthenticated(biometricsResult);
       setLoaded(true);
       console.log("Performed effects on startup");
     }
@@ -115,7 +116,7 @@ export default function RootLayoutNav() {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (loaded) {
+  if (loaded && biometricAuthenticated) {
     return (
       <>
         <TRPCProvider>

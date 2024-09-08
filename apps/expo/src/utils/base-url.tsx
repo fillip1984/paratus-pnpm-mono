@@ -11,10 +11,10 @@ export const getBaseUrl = () => {
    * **NOTE**: This is only for development. In production, you'll want to set the
    * baseUrl to your production API URL.
    */
-  // if (process.env.NODE_ENV === "development") {
-  //   return "http://localhost:3000";
-  // } else {
-  // return process.env.EXPO_API_SERVER_URL;
-  return "https://paratus.illizen.com";
-  // }
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000";
+  } else {
+    // return process.env.EXPO_API_SERVER_URL;
+    return "https://paratus.illizen.com";
+  }
 };

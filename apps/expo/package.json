@@ -6,7 +6,6 @@
   "scripts": {
     "clean": "git clean -xdf .expo android ios node_modules",
     "dev": "expo run:ios",
-    "build": "expo run:ios",
     "build:production": "eas build -p ios -e production --local",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -28,6 +27,7 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "babel-plugin-inline-import": "^3.0.0",
+    "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "drizzle-orm": "^0.30.8",
     "expo": "~51.0.31",

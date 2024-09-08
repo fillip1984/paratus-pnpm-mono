@@ -35,6 +35,9 @@ export const authConfig = {
   secret: env.AUTH_SECRET,
   providers: [GitHub],
   callbacks: {
+    authorized(params) {
+      return params.auth?.user.email === "fillip1984@gmail.com";
+    },
     session: (opts) => {
       if (!("user" in opts))
         throw new Error("unreachable with session strategy");

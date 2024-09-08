@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import React from "react";
+import { signIn } from "next-auth/react";
 
 export default function LogIn() {
   return (
@@ -16,7 +16,7 @@ export default function LogIn() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="images/github-mark.png"
-            alt="Google logo"
+            alt="Github logo"
             className="h-8 w-8"
           />
           Sign in with GitHub
@@ -24,11 +24,10 @@ export default function LogIn() {
 
         <button
           type="button"
-          onClick={() =>
-            void signIn("google", { callbackUrl: "http://localhost:3000" })
-          }
+          onClick={() => void signIn("google")}
           className="border-gray-300 flex w-full items-center gap-4 rounded bg-white p-3 font-medium text-black"
           disabled>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="images/google_G.png"
             alt="Google logo"
