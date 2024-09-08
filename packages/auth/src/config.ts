@@ -31,7 +31,7 @@ export const authConfig = {
         skipCSRFCheck: skipCSRFCheck,
         trustHost: true,
       }
-    : {}),
+    : { trustHost: true }),
   secret: env.AUTH_SECRET,
   providers: [GitHub],
   callbacks: {
