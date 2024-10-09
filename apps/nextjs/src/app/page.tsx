@@ -22,7 +22,7 @@ export default function Timeline() {
       <button
         type="button"
         onClick={toggleTaskModal}
-        className="absolute bottom-4 right-4 z-[991] flex h-12 w-12 items-center justify-center rounded-full bg-danger">
+        className="absolute bottom-4 right-4 z-[991] flex h-12 w-12 items-center justify-center rounded-full bg-primary">
         <BsPlus
           className={`text-6xl transition ${isTaskModalOpen ? "rotate-45" : ""}`}
         />
