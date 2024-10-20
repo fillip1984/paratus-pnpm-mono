@@ -4,8 +4,8 @@ import { z } from "zod";
 import { protectedProcedure } from "../trpc";
 
 export const ProjectSchema = z.object({
-  id: z.number().nullish(),
-  name: z.string(),
+  id: z.string().nullish(),
+  title: z.string(),
   description: z.string().nullish(),
 });
 
@@ -18,7 +18,7 @@ export const projectRouter = {
       // console.log({ input });
       const result = await ctx.db.project.create({
         data: {
-          name: input.name,
+          title: input.title,
           description: input.description,
           createdById: ctx.session.user.id,
         },
@@ -31,7 +31,7 @@ export const projectRouter = {
       where: {
         createdById: ctx.session.user.id,
       },
-      select: { id: true, name: true, description: true },
+      select: { id: true, title: true, description: true },
       orderBy: { id: "asc" },
     });
     return result;
@@ -39,7 +39,7 @@ export const projectRouter = {
   readOne: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -61,7 +61,7 @@ export const projectRouter = {
       const result = await ctx.db.project.update({
         where: { id: input.id },
         data: {
-          name: input.name,
+          title: input.title,
           description: input.description,
           createdById: ctx.session.user.id,
         },
@@ -71,7 +71,7 @@ export const projectRouter = {
     }),
 
   delete: protectedProcedure
-    .input(z.array(z.number()))
+    .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.db.project.deleteMany({
         where: {

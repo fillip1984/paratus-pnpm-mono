@@ -3,25 +3,31 @@ import { z } from "zod";
 
 import { protectedProcedure } from "../trpc";
 
-export const TodoSchema = z.object({
-  id: z.number().nullish(),
-  text: z.string(),
-  complete: z.boolean(),
-  timer: z.number(),
+export const NewTodoSchema = z.object({
+  title: z.string(),
+  description: z.string().nullish(),
+  dueDate: z.string().nullish(),
+  priority: z.string().nullish(),
 });
+// type NewTodoSchemaType = z.infer<typeof NewTodoSchema>;
 
-export type TodoSchemaType = z.infer<typeof TodoSchema>;
+export const UpdateTodoSchema = NewTodoSchema.extend({
+  id: z.string(),
+  completedAt: z.date().nullish(),
+});
+// type UpdateTodoSchemaType = z.infer<typeof UpdateTodoSchema>;
 
 export const todoRouter = {
   create: protectedProcedure
-    .input(TodoSchema)
+    .input(NewTodoSchema)
     .mutation(async ({ ctx, input }) => {
       // console.log({ input });
       const result = await ctx.db.todo.create({
         data: {
-          text: input.text,
-          complete: input.complete,
-          timer: input.timer,
+          title: input.title,
+          description: input.description,
+          dueDate: input.dueDate,
+          priority: input.priority,
           createdById: ctx.session.user.id,
         },
       });
@@ -33,7 +39,14 @@ export const todoRouter = {
       where: {
         createdById: ctx.session.user.id,
       },
-      select: { id: true, text: true, complete: true, timer: true },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        completedAt: true,
+        dueDate: true,
+        priority: true,
+      },
       orderBy: { id: "asc" },
     });
     return result;
@@ -41,7 +54,7 @@ export const todoRouter = {
   readOne: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -55,7 +68,7 @@ export const todoRouter = {
       return result;
     }),
   update: protectedProcedure
-    .input(TodoSchema)
+    .input(UpdateTodoSchema)
     .mutation(async ({ ctx, input }) => {
       if (!input.id) {
         throw Error("Unable to update without an id");
@@ -63,10 +76,11 @@ export const todoRouter = {
       const result = await ctx.db.todo.update({
         where: { id: input.id },
         data: {
-          text: input.text,
-          complete: input.complete,
-          timer: input.timer,
-          createdById: ctx.session.user.id,
+          title: input.title,
+          description: input.description,
+          dueDate: input.dueDate,
+          priority: input.priority,
+          completedAt: input.completedAt,
         },
       });
 
@@ -74,7 +88,7 @@ export const todoRouter = {
     }),
 
   delete: protectedProcedure
-    .input(z.array(z.number()))
+    .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.db.todo.deleteMany({
         where: {
