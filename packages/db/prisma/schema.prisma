@@ -64,20 +64,22 @@ model VerificationToken {
 }
 
 model Todo {
-    id        Int      @id @default(autoincrement())
-    text      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    timer     Int      @default(0)
-    complete  Boolean  @default(false)
+    id          String    @id @default(cuid())
+    title       String
+    description String?
+    dueDate     String?
+    priority    String?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    completedAt DateTime?
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
 }
 
 model Project {
-    id          Int      @id @default(autoincrement())
-    name        String
+    id          String   @id @default(cuid())
+    title       String
     description String?
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
