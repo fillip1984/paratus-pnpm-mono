@@ -50,6 +50,9 @@ export default function Timeline() {
         <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-background">
           Background
         </div>
+        <div className="bg-foreground flex h-10 w-24 items-center justify-center rounded border border-white">
+          Foreground
+        </div>
         <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-black">
           Black
         </div>
