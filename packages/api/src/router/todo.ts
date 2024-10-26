@@ -8,6 +8,7 @@ export const NewTodoSchema = z.object({
   description: z.string().nullish(),
   dueDate: z.string().nullish(),
   priority: z.string().nullish(),
+  projectId: z.string().nullish(),
 });
 // type NewTodoSchemaType = z.infer<typeof NewTodoSchema>;
 
@@ -21,13 +22,14 @@ export const todoRouter = {
   create: protectedProcedure
     .input(NewTodoSchema)
     .mutation(async ({ ctx, input }) => {
-      // console.log({ input });
+      console.log({ input });
       const result = await ctx.db.todo.create({
         data: {
           title: input.title,
           description: input.description,
           dueDate: input.dueDate,
           priority: input.priority,
+          projectId: input.projectId,
           createdById: ctx.session.user.id,
         },
       });
@@ -46,6 +48,12 @@ export const todoRouter = {
         completedAt: true,
         dueDate: true,
         priority: true,
+        project: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
       orderBy: { id: "asc" },
     });
@@ -73,6 +81,7 @@ export const todoRouter = {
       if (!input.id) {
         throw Error("Unable to update without an id");
       }
+      console.log({ input });
       const result = await ctx.db.todo.update({
         where: { id: input.id },
         data: {
@@ -80,6 +89,7 @@ export const todoRouter = {
           description: input.description,
           dueDate: input.dueDate,
           priority: input.priority,
+          projectId: input.projectId,
           completedAt: input.completedAt,
         },
       });

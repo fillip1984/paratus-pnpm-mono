@@ -7,10 +7,7 @@ export default {
       primary: "hsl(10, 74%, 60%)", //imperial red
       secondary: "hsl(210, 20%, 17%)", // bittersweet
       background: "hsl(0, 0%, 24%)", //onyx
-      // primary: "#6E7E85",
-      // secondary: "#E2E2E2",
-      // accent: "#B7CECE",
-      // accent2: "#BBBAC6",
+      foreground: "hsl(0%, 100%, 50%)",
       black: "hsl(0, 0%, 0%)", // Black
       white: "hsl(55, 34%, 87%)", //eggshell
       gray: "hsl(210, 17%, 35%)", //Payne's gray

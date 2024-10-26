@@ -32,12 +32,45 @@ export default function Timeline() {
   };
 
   return (
-    <main className="relative h-full w-full overflow-hidden bg-black text-white">
+    <main className="relative h-full w-full overflow-hidden bg-background text-white">
       <div id="heading" className="mt-4 flex flex-col gap-2 p-2">
         <h3 className="flex">Today</h3>
         <span className="text-sm text-white/60">
           {todos?.length ?? 0} tasks
         </span>
+      </div>
+
+      <div className="flex flex-wrap gap-2 px-2 py-4">
+        <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-primary">
+          Primary
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-secondary">
+          Secondary
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-background">
+          Background
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-black">
+          Black
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded border border-black bg-white text-black">
+          White
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-gray">
+          Gray
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded bg-danger text-black">
+          Secondary
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded bg-warning text-black">
+          Secondary
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded bg-success text-black">
+          Secondary
+        </div>
+        <div className="flex h-10 w-24 items-center justify-center rounded bg-info text-black">
+          Secondary
+        </div>
       </div>
 
       <div className="flex h-full justify-center overflow-y-auto p-4">
@@ -84,7 +117,7 @@ const TodoRow = ({
   return (
     <div
       onClick={() => handleEditTaskModal(todo)}
-      className="flex cursor-pointer gap-2 border-t border-t-white/50 py-2">
+      className="bg-foreground flex cursor-pointer gap-2 border-t border-t-white/50 py-2">
       <input type="checkbox" className="mt-1 rounded-full border-2 bg-black" />
       <div className="flex w-full justify-between">
         <div className="flex flex-col">
@@ -98,7 +131,9 @@ const TodoRow = ({
           </div>
         </div>
         <div className="flex items-end">
-          <span className="text-xs">Inbox</span>
+          <span className="text-xs">
+            {todo.project?.title ? todo.project.title : "Inbox"}
+          </span>
         </div>
       </div>
     </div>

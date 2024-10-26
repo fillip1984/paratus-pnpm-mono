@@ -18,7 +18,7 @@ export default function Projects() {
   const [newProject, setNewProject] = useState("");
 
   const handleAddProject = () => {
-    createProject({ name: newProject });
+    createProject({ title: newProject });
   };
 
   return (
@@ -38,7 +38,7 @@ export default function Projects() {
             <div
               key={project.id}
               className="flex items-center gap-2 rounded-lg bg-white/30 p-2">
-              <span>{project.name}</span>
+              <span>{project.title}</span>
             </div>
           ))}
 
@@ -52,7 +52,7 @@ export default function Projects() {
             />
             <button
               onClick={handleAddProject}
-              className="rounded-r bg-accent px-2">
+              className="bg-accent rounded-r px-2">
               <BsPlusLg className="text-2xl" />
             </button>
           </div>

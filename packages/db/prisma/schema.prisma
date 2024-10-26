@@ -73,8 +73,11 @@ model Todo {
     updatedAt   DateTime  @updatedAt
     completedAt DateTime?
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
+    project Project? @relation(fields: [projectId], references: [id])
+
+    createdBy   User    @relation(fields: [createdById], references: [id])
     createdById String
+    projectId   String?
 }
 
 model Project {
@@ -83,6 +86,8 @@ model Project {
     description String?
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
+
+    Todo Todo[]
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String

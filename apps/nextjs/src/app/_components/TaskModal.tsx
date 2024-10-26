@@ -23,6 +23,8 @@ import type { RouterOutputs } from "@acme/api";
 
 import { api } from "~/trpc/react";
 
+type Project = RouterOutputs["project"]["readAll"][number];
+
 export default function TaskModal({
   toggleTaskModal,
   editingTodo,
@@ -40,14 +42,22 @@ export default function TaskModal({
   const [isAtSpecificTime, setIsAtSpecificTime] = useState(false);
   const [time, setTime] = useState("");
 
+  const [project, setProject] = useState<Project>();
+  const [isProjectPickerOpen, setIsProjectPickerOpen] = useState(false);
+  const { data: projects } = api.project.readAll.useQuery();
+
   useEffect(() => {
     if (editingTodo) {
       setTitle(editingTodo.title);
       setDescription(editingTodo.description ?? "");
-      console.log({ dd: editingTodo.dueDate });
-      setDueDate(parseISO(editingTodo.dueDate, "yyyy-MM-dd"));
+      setDueDate(
+        editingTodo.dueDate ? parseISO(editingTodo.dueDate) : undefined,
+      );
       if (editingTodo.priority) {
         setPriority(editingTodo.priority);
+      }
+      if (editingTodo.project) {
+        setProject({ ...editingTodo.project, description: "" } as Project);
       }
     }
   }, [editingTodo]);
@@ -73,6 +83,11 @@ export default function TaskModal({
     setIsPriorityOpen(false);
   };
 
+  const handleProject = (project: Project | undefined) => {
+    setProject(project);
+    setIsProjectPickerOpen(false);
+  };
+
   const apiUtils = api.useUtils();
   const { mutate: addTask } = api.todo.create.useMutation({
     onSuccess: () => {
@@ -89,10 +104,17 @@ export default function TaskModal({
         description,
         dueDate: isoDueDate,
         priority,
+        projectId: project ? project.id : null,
         completedAt: null,
       });
     } else {
-      addTask({ title, description, dueDate: isoDueDate, priority });
+      addTask({
+        title,
+        description,
+        dueDate: isoDueDate,
+        priority,
+        projectId: project ? project.id : null,
+      });
     }
   };
 
@@ -297,7 +319,38 @@ export default function TaskModal({
           </div>
           <div className="border-t border-white/50">
             <div className="flex items-center justify-between p-3">
-              <span>Inbox</span>
+              <Popover
+                isOpen={isProjectPickerOpen}
+                positions={["bottom", "right"]}
+                padding={1}
+                onClickOutside={(e) => {
+                  e.stopPropagation();
+                  setIsProjectPickerOpen(false);
+                }}
+                content={() => (
+                  <div className="flex max-w-[300px] flex-col rounded border-white/30 bg-gray p-1 text-white">
+                    {projects?.map((project) => (
+                      <button
+                        key={project.id}
+                        onClick={() => handleProject(project)}
+                        className="w-full text-left hover:bg-primary">
+                        {project.title}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() => handleProject(undefined)}
+                      className="w-full text-left hover:bg-primary">
+                      Inbox
+                    </button>
+                  </div>
+                )}>
+                <button
+                  onClick={() => setIsProjectPickerOpen((prev) => !prev)}
+                  className="rounded border bg-white/50 px-1">
+                  {project ? project.title : "Inbox"}
+                </button>
+              </Popover>
               <div className="flex gap-2">
                 <button
                   type="button"
