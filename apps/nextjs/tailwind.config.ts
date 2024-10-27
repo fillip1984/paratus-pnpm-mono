@@ -1,9 +1,7 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
-// This doesn't seem to work and I don't know why
-// import baseConfig from "@acme/tailwind-config/web";
-import webConfig from "../../tooling/tailwind/web";
+import webConfig from "@acme/tailwind-config/web";
 
 export default {
   // We need to append the path to the UI package to the content array so that

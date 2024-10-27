@@ -3,6 +3,23 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 56, 43%, 7%;
+    --foreground: 240 10% 44% /* Dim gray */;
+
+    --black: 0, 0%, 0%;
+    --white: 0, 0%, 100%;
+    --gray: 210, 17%, 35%;
+
+    --primary: 10, 74%, 60% /* Burnt sienna*/;
+    --secondary: 214, 68%, 35% /* YInMn Blue */;
+
+    --danger: 358, 100%, 56%;
+    --warning: 54, 63%, 71%;
+    --success: 133, 31%, 69%;
+    --info: 208, 52%, 83%;
+  }
+
   h1 {
     @apply text-8xl;
   }

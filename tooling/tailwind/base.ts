@@ -4,17 +4,20 @@ export default {
   content: ["src/**/*.{ts,tsx}"],
   theme: {
     colors: {
-      primary: "hsl(10, 74%, 60%)", //imperial red
-      secondary: "hsl(210, 20%, 17%)", // bittersweet
-      background: "hsl(0, 0%, 24%)", //onyx
-      foreground: "hsl(0%, 100%, 50%)",
-      black: "hsl(0, 0%, 0%)", // Black
-      white: "hsl(55, 34%, 87%)", //eggshell
-      gray: "hsl(210, 17%, 35%)", //Payne's gray
-      danger: "hsl(358, 100%, 56%)", //Red (CMYK)
-      warning: "hsl(54, 63%, 71%)", // Flax
-      success: "hsl(133, 31%, 69%)", // Celadon
-      info: "hsl(208, 52%, 83%)", // Columbia blue
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
+
+      black: "hsl(var(--black))",
+      white: "hsl(55, 34%, 87%)",
+      gray: "hsl(210, 17%, 35%)",
+
+      primary: "hsl(var(--primary))",
+      secondary: "hsl(var(--secondary))",
+
+      danger: "hsl(var(--danger))",
+      warning: "hsl(var(--warning))",
+      success: "hsl(var(--success))",
+      info: "hsl(var(--info))",
     },
   },
 } satisfies Config;
