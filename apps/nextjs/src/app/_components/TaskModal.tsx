@@ -355,13 +355,13 @@ export default function TaskModal({
                 <button
                   type="button"
                   onClick={toggleTaskModal}
-                  className="rounded bg-secondary px-2 py-2 text-xs font-semibold">
+                  className="rounded border border-primary px-2 py-2 text-xs font-semibold text-primary">
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleAddOrUpdateTask}
-                  className="rounded bg-primary px-2 text-xs font-bold transition-colors ease-in"
+                  className="rounded bg-primary px-2 text-xs font-bold text-black transition-colors ease-in"
                   disabled={!title}>
                   Save task
                 </button>

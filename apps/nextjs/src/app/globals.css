@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: 56, 43%, 7%;
-    --foreground: 240 10% 44% /* Dim gray */;
+    --background: 206, 24%, 6%;
+    --foreground: 240 0% 36% /* Davy's gray */;
 
     --black: 0, 0%, 0%;
     --white: 0, 0%, 100%;

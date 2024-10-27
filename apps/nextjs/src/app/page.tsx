@@ -10,7 +10,6 @@ import type { RouterOutputs } from "@acme/api";
 import { api } from "~/trpc/react";
 import TaskModal from "./_components/TaskModal";
 
-// type Todos = RouterOutputs["todo"]["readAll"];
 type Todo = RouterOutputs["todo"]["readAll"][number];
 
 export default function Timeline() {
@@ -40,7 +39,7 @@ export default function Timeline() {
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-2 px-2 py-4">
+      {/* <div className="flex flex-wrap gap-2 px-2 py-4">
         <div className="flex h-10 w-24 items-center justify-center rounded border border-white bg-primary">
           Primary
         </div>
@@ -74,7 +73,7 @@ export default function Timeline() {
         <div className="flex h-10 w-24 items-center justify-center rounded bg-info text-black">
           Secondary
         </div>
-      </div>
+      </div> */}
 
       <div className="flex h-full justify-center overflow-y-auto p-4">
         <div className="flex w-full max-w-[800px] flex-col">
@@ -120,8 +119,8 @@ const TodoRow = ({
   return (
     <div
       onClick={() => handleEditTaskModal(todo)}
-      className="bg-foreground flex cursor-pointer gap-2 border-t border-t-white/50 py-2">
-      <input type="checkbox" className="mt-1 rounded-full border-2 bg-black" />
+      className="flex cursor-pointer gap-2 border-t border-t-white/50 py-2">
+      <input type="checkbox" className="mt-1 rounded-full border-2" />
       <div className="flex w-full justify-between">
         <div className="flex flex-col">
           <span className="font-bold">{todo.title}</span>
