@@ -31,7 +31,13 @@ export const projectRouter = {
       where: {
         createdById: ctx.session.user.id,
       },
-      select: { id: true, title: true, description: true },
+
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        _count: { select: { Todo: true } },
+      },
       orderBy: { id: "asc" },
     });
     return result;
