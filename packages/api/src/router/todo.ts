@@ -110,4 +110,22 @@ export const todoRouter = {
 
       return result;
     }),
+  inbox: protectedProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db.todo.findMany({
+      where: {
+        projectId: null,
+        createdById: ctx.session.user.id,
+      },
+    });
+    return result;
+  }),
+  inboxCount: protectedProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db.todo.findMany({
+      where: {
+        projectId: null,
+        createdById: ctx.session.user.id,
+      },
+    });
+    return result.length;
+  }),
 } satisfies TRPCRouterRecord;
