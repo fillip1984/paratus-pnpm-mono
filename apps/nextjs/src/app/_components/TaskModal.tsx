@@ -329,6 +329,11 @@ export default function TaskModal({
                 }}
                 content={() => (
                   <div className="flex max-w-[300px] flex-col rounded border-white/30 bg-gray p-1 text-white">
+                    <button
+                      onClick={() => handleProject(undefined)}
+                      className="w-full text-left hover:bg-primary">
+                      Inbox
+                    </button>
                     {projects?.map((project) => (
                       <button
                         key={project.id}
@@ -337,12 +342,6 @@ export default function TaskModal({
                         {project.title}
                       </button>
                     ))}
-
-                    <button
-                      onClick={() => handleProject(undefined)}
-                      className="w-full text-left hover:bg-primary">
-                      Inbox
-                    </button>
                   </div>
                 )}>
                 <button

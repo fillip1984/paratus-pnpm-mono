@@ -6,8 +6,7 @@ import { signOut } from "next-auth/react";
 import { BiLayout } from "react-icons/bi";
 import { BsChevronDoubleLeft } from "react-icons/bs";
 import { FaSignOutAlt } from "react-icons/fa";
-import { FaListCheck, FaTimeline } from "react-icons/fa6";
-import { LuCalendarRange } from "react-icons/lu";
+import { FaTimeline } from "react-icons/fa6";
 
 export default function SideNav() {
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(true);
@@ -29,7 +28,7 @@ export default function SideNav() {
               Timeline
             </span>
           </Link>
-          <Link
+          {/* <Link
             href="/todos"
             className="flex items-center gap-2 rounded-lg bg-white/30 p-2 transition hover:bg-white/50">
             <FaListCheck className="text-4xl text-white" />
@@ -46,7 +45,7 @@ export default function SideNav() {
               className={`${isMenuCollapsed ? "hidden" : ""} uppercase text-white`}>
               Routines
             </span>
-          </Link>
+          </Link> */}
           <Link
             href="/projects"
             className="flex items-center gap-2 rounded-lg bg-white/30 p-2 transition hover:bg-white/50">
