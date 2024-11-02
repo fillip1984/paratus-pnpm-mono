@@ -27,10 +27,10 @@ type Project = RouterOutputs["project"]["readAll"][number];
 
 export default function TaskModal({
   toggleTaskModal,
-  editingTodo,
+  editingTask,
 }: {
   toggleTaskModal: () => void;
-  editingTodo: RouterOutputs["todo"]["readAll"][number] | undefined;
+  editingTask: RouterOutputs["task"]["readAll"][number] | undefined;
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -47,20 +47,20 @@ export default function TaskModal({
   const { data: projects } = api.project.readAll.useQuery();
 
   useEffect(() => {
-    if (editingTodo) {
-      setTitle(editingTodo.title);
-      setDescription(editingTodo.description ?? "");
+    if (editingTask) {
+      setTitle(editingTask.title);
+      setDescription(editingTask.description ?? "");
       setDueDate(
-        editingTodo.dueDate ? parseISO(editingTodo.dueDate) : undefined,
+        editingTask.dueDate ? parseISO(editingTask.dueDate) : undefined,
       );
-      if (editingTodo.priority) {
-        setPriority(editingTodo.priority);
+      if (editingTask.priority) {
+        setPriority(editingTask.priority);
       }
-      if (editingTodo.project) {
-        setProject({ ...editingTodo.project, description: "" } as Project);
+      if (editingTask.project) {
+        setProject({ ...editingTask.project, description: "" } as Project);
       }
     }
-  }, [editingTodo]);
+  }, [editingTask]);
 
   const handleDueDate = (
     newDueDate: Date | undefined,
@@ -89,7 +89,7 @@ export default function TaskModal({
   };
 
   const apiUtils = api.useUtils();
-  const { mutate: addTask } = api.todo.create.useMutation({
+  const { mutate: addTask } = api.task.create.useMutation({
     onSuccess: () => {
       void apiUtils.invalidate();
       toggleTaskModal();
@@ -97,9 +97,9 @@ export default function TaskModal({
   });
   const handleAddOrUpdateTask = () => {
     const isoDueDate = dueDate ? formatISO(dueDate) : null;
-    if (editingTodo) {
+    if (editingTask) {
       updateTask({
-        id: editingTodo.id,
+        id: editingTask.id,
         title,
         description,
         dueDate: isoDueDate,
@@ -118,24 +118,24 @@ export default function TaskModal({
     }
   };
 
-  const { mutate: updateTask } = api.todo.update.useMutation({
+  const { mutate: updateTask } = api.task.update.useMutation({
     onSuccess: () => {
       void apiUtils.invalidate();
       toggleTaskModal();
     },
   });
 
-  const { mutate: removeTask } = api.todo.delete.useMutation({
+  const { mutate: removeTask } = api.task.delete.useMutation({
     onSuccess: () => {
       void apiUtils.invalidate();
       toggleTaskModal();
     },
   });
   const handleRemoveTask = () => {
-    if (!editingTodo) {
-      throw Error("Unable to delete todo, was not given a todo to delete");
+    if (!editingTask) {
+      throw Error("Unable to delete task, was not given a task to delete");
     }
-    removeTask([editingTodo.id]);
+    removeTask([editingTask.id]);
   };
 
   return (
@@ -157,7 +157,7 @@ export default function TaskModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full border-0 bg-black p-0 font-bold placeholder:font-bold focus:border-0 focus:ring-0"
-              placeholder="Todo title..."
+              placeholder="Task title..."
             />
             <TextareaAutosize
               value={description}
@@ -290,7 +290,7 @@ export default function TaskModal({
                   {priority ? priority : "Priority"}
                 </button>
               </Popover>
-              {editingTodo && (
+              {editingTask && (
                 <Popover
                   isOpen={isAdditionalOptionsOpen}
                   positions={["bottom", "right"]}

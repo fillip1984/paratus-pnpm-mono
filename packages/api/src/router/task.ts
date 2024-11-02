@@ -1,29 +1,23 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
+import { PersistedSchema } from "../../../../apps/nextjs/src/trpc/types";
 import { protectedProcedure } from "../trpc";
 
-export const NewTodoSchema = z.object({
+const TaskSchema = PersistedSchema.extend({
   title: z.string(),
   description: z.string().nullish(),
   dueDate: z.string().nullish(),
   priority: z.string().nullish(),
   projectId: z.string().nullish(),
-});
-// type NewTodoSchemaType = z.infer<typeof NewTodoSchema>;
-
-export const UpdateTodoSchema = NewTodoSchema.extend({
-  id: z.string(),
   completedAt: z.date().nullish(),
 });
-// type UpdateTodoSchemaType = z.infer<typeof UpdateTodoSchema>;
 
-export const todoRouter = {
+export const taskRouter = {
   create: protectedProcedure
-    .input(NewTodoSchema)
+    .input(TaskSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log({ input });
-      const result = await ctx.db.todo.create({
+      return await ctx.db.task.create({
         data: {
           title: input.title,
           description: input.description,
@@ -33,11 +27,9 @@ export const todoRouter = {
           createdById: ctx.session.user.id,
         },
       });
-
-      return result;
     }),
   readAll: protectedProcedure.query(async ({ ctx }) => {
-    const result = await ctx.db.todo.findMany({
+    return await ctx.db.task.findMany({
       where: {
         createdById: ctx.session.user.id,
       },
@@ -57,32 +49,21 @@ export const todoRouter = {
       },
       orderBy: { id: "asc" },
     });
-    return result;
   }),
   readOne: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
+    .input(PersistedSchema)
     .query(async ({ ctx, input }) => {
-      const result = await ctx.db.todo.findUnique({
+      return await ctx.db.task.findUnique({
         where: {
           id: input.id,
           createdById: ctx.session.user.id,
         },
       });
-
-      return result;
     }),
   update: protectedProcedure
-    .input(UpdateTodoSchema)
+    .input(TaskSchema)
     .mutation(async ({ ctx, input }) => {
-      if (!input.id) {
-        throw Error("Unable to update without an id");
-      }
-      console.log({ input });
-      const result = await ctx.db.todo.update({
+      return await ctx.db.task.update({
         where: { id: input.id },
         data: {
           title: input.title,
@@ -93,39 +74,30 @@ export const todoRouter = {
           completedAt: input.completedAt,
         },
       });
-
-      return result;
     }),
-
   delete: protectedProcedure
-    .input(z.array(z.string()))
+    .input(PersistedSchema)
     .mutation(async ({ ctx, input }) => {
-      const result = await ctx.db.todo.deleteMany({
+      return await ctx.db.task.delete({
         where: {
-          id: {
-            in: input,
-          },
+          id: input.id,
         },
       });
-
-      return result;
     }),
   inbox: protectedProcedure.query(async ({ ctx }) => {
-    const result = await ctx.db.todo.findMany({
+    return await ctx.db.task.findMany({
       where: {
         projectId: null,
         createdById: ctx.session.user.id,
       },
     });
-    return result;
   }),
   inboxCount: protectedProcedure.query(async ({ ctx }) => {
-    const result = await ctx.db.todo.findMany({
+    return await ctx.db.task.count({
       where: {
         projectId: null,
         createdById: ctx.session.user.id,
       },
     });
-    return result.length;
   }),
 } satisfies TRPCRouterRecord;

@@ -5,16 +5,14 @@ import { AnimatePresence } from "framer-motion";
 import { BsPlus } from "react-icons/bs";
 import { FaInbox } from "react-icons/fa6";
 
-import type { RouterOutputs } from "@acme/api";
-
+import type { Project } from "~/trpc/types";
 import { api } from "~/trpc/react";
 import ProjectModal from "../_components/ProjectModal";
-
-type Project = RouterOutputs["project"]["readAll"][number] | undefined;
+import { categoryIconLookup } from "../utils/IconHelper";
 
 export default function Projects() {
   const { data: projects } = api.project.readAll.useQuery();
-  const { data: inboxCount } = api.todo.inboxCount.useQuery();
+  const { data: inboxCount } = api.task.inboxCount.useQuery();
 
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | undefined>();
@@ -44,9 +42,12 @@ export default function Projects() {
               type="button"
               onClick={() => toggleProjectModal(project)}
               className="flex items-center gap-2 rounded-lg bg-white/30 p-2">
+              <span className="text-3xl">
+                {categoryIconLookup(project.category)}
+              </span>
               <span>{project.title}</span>
               <span className="ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
-                {project._count.Todo}
+                {project._count.tasks}
               </span>
             </button>
           ))}

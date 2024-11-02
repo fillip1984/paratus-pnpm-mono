@@ -3,106 +3,49 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaMoneyBills } from "react-icons/fa6";
-import { GiBiceps, GiBroom, GiThreeFriends } from "react-icons/gi";
-import { IoConstructSharp } from "react-icons/io5";
-import { LuConstruction } from "react-icons/lu";
-import { MdBusinessCenter } from "react-icons/md";
-import { RiMentalHealthFill } from "react-icons/ri";
-import { SiApplearcade } from "react-icons/si";
 import TextareaAutosize from "react-textarea-autosize";
 import { Popover } from "react-tiny-popover";
 
-import type { RouterOutputs } from "@acme/api";
-
+import type { Category, Project } from "~/trpc/types";
 import { api } from "~/trpc/react";
-
-type Project = RouterOutputs["project"]["readAll"][number] | undefined;
-
-interface Category {
-  label: string;
-  icon: JSX.Element;
-}
+import { categoryIconLookup } from "../utils/IconHelper";
 
 export default function ProjectModal({
   toggleProjectModal,
   editingProject,
 }: {
-  toggleProjectModal: (project: Project) => void;
-  editingProject: Project;
+  toggleProjectModal: (project: Project | undefined) => void;
+  editingProject: Project | undefined;
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<Category | undefined>();
+  const { data: categories } = api.project.readAllCategories.useQuery();
 
   const [isAdditionalOptionsOpen, setIsAdditionalOptionsOpen] = useState(false);
-
   const [isCategorySelectorOpen, setIsCategorySelectorOpen] = useState(false);
+
   const toggleCategorySelector = () => {
-    console.log("togglin");
     setIsCategorySelectorOpen((prev) => !prev);
   };
-  useEffect(() => {
-    console.log({ isCategorySelectorOpen });
-  }, [isCategorySelectorOpen]);
-  const [categoryies] = useState([
-    {
-      label: "Career",
-      icon: <MdBusinessCenter />,
-    },
-    {
-      label: "Chores",
-      icon: <GiBroom />,
-    },
-    {
-      label: "Entertainment",
-      icon: <SiApplearcade />,
-    },
-    {
-      label: "Finance",
-      icon: <FaMoneyBills />,
-    },
-    {
-      label: "Friends/Relationships",
-      icon: <GiThreeFriends />,
-    },
-    {
-      label: "Health/Fitness",
-      icon: <GiBiceps />,
-    },
-    {
-      label: "Home Improvements",
-      icon: <LuConstruction />,
-    },
-    {
-      label: "Mindfulness",
-      icon: <RiMentalHealthFill />,
-    },
-    {
-      label: "Periodic Maintenance",
-      icon: <IoConstructSharp />,
-    },
-  ]);
 
   useEffect(() => {
-    if (!title) {
+    if (!title || !categories) {
       setCategory(undefined);
     } else {
-      const possible = categoryies.find((category) =>
-        category.label
+      const possible = categories.find((category) =>
+        category.title
           .toLocaleLowerCase()
           .startsWith(title.toLocaleLowerCase()),
       );
 
       if (possible) {
-        console.log("possible");
         setCategory(possible);
       } else {
-        console.log("undefined");
         setCategory(undefined);
       }
     }
-  }, [title]);
+  }, [title, categories]);
 
   useEffect(() => {
     if (editingProject) {
@@ -127,17 +70,22 @@ export default function ProjectModal({
   });
 
   const handleAddOrUpdate = () => {
-    // const isoDueDate = dueDate ? formatISO(dueDate) : null;
+    if (!category) {
+      return;
+    }
+
     if (editingProject) {
       updateProject({
         id: editingProject.id,
         title,
         description,
+        category: category,
       });
     } else {
       addProject({
         title,
         description,
+        category: category,
       });
     }
   };
@@ -183,7 +131,7 @@ export default function ProjectModal({
                 }}
                 content={
                   <CategorySelector
-                    categories={categoryies}
+                    categories={categories}
                     setCategory={setCategory}
                     toggleIsCategorySelector={toggleCategorySelector}
                   />
@@ -275,14 +223,15 @@ const CategorySelector = ({
   setCategory,
   toggleIsCategorySelector,
 }: {
-  categories: Category[];
+  categories: Category[] | undefined;
   setCategory: Dispatch<SetStateAction<Category | undefined>>;
   toggleIsCategorySelector: () => void;
 }) => {
   return (
     <div className="grid grid-cols-3 gap-2 rounded border border-gray bg-black">
-      {categories.map((category) => (
+      {categories?.map((category) => (
         <button
+          key={category.id}
           type="button"
           onClick={() => {
             setCategory(category);
@@ -299,8 +248,8 @@ const CategorySelector = ({
 const CategoryCard = ({ category }: { category: Category }) => {
   return (
     <div className="flex flex-col items-center gap-1 p-1 text-white">
-      <span className="text-3xl">{category.icon}</span>
-      <span>{category.label}</span>
+      <span className="text-3xl">{categoryIconLookup(category)}</span>
+      <span>{category.title}</span>
     </div>
   );
 };

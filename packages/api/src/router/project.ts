@@ -1,33 +1,36 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
+import { PersistedSchema } from "../../../../apps/nextjs/src/trpc/types";
 import { protectedProcedure } from "../trpc";
 
-export const ProjectSchema = z.object({
-  id: z.string().nullish(),
+const CategorySchema = PersistedSchema.extend({
   title: z.string(),
   description: z.string().nullish(),
+  iconName: z.string(),
 });
 
-export type ProjectSchemaType = z.infer<typeof ProjectSchema>;
+const ProjectSchema = PersistedSchema.extend({
+  title: z.string(),
+  description: z.string().nullish(),
+  category: CategorySchema,
+});
 
 export const projectRouter = {
   create: protectedProcedure
-    .input(ProjectSchema)
+    .input(ProjectSchema.omit({ id: true }))
     .mutation(async ({ ctx, input }) => {
-      // console.log({ input });
-      const result = await ctx.db.project.create({
+      return await ctx.db.project.create({
         data: {
           title: input.title,
           description: input.description,
+          categoryId: input.category.id,
           createdById: ctx.session.user.id,
         },
       });
-
-      return result;
     }),
   readAll: protectedProcedure.query(async ({ ctx }) => {
-    const result = await ctx.db.project.findMany({
+    return await ctx.db.project.findMany({
       where: {
         createdById: ctx.session.user.id,
       },
@@ -36,27 +39,21 @@ export const projectRouter = {
         id: true,
         title: true,
         description: true,
-        _count: { select: { Todo: true } },
+        category: true,
+        _count: { select: { tasks: true } },
       },
       orderBy: { id: "asc" },
     });
-    return result;
   }),
   readOne: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
+    .input(PersistedSchema)
     .query(async ({ ctx, input }) => {
-      const result = await ctx.db.project.findUnique({
+      return await ctx.db.project.findUnique({
         where: {
           id: input.id,
           createdById: ctx.session.user.id,
         },
       });
-
-      return result;
     }),
   update: protectedProcedure
     .input(ProjectSchema)
@@ -64,7 +61,7 @@ export const projectRouter = {
       if (!input.id) {
         throw Error("Unable to update without an id");
       }
-      const result = await ctx.db.project.update({
+      return await ctx.db.project.update({
         where: { id: input.id },
         data: {
           title: input.title,
@@ -72,21 +69,75 @@ export const projectRouter = {
           createdById: ctx.session.user.id,
         },
       });
-
-      return result;
     }),
 
   delete: protectedProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
-      const result = await ctx.db.project.deleteMany({
+      return await ctx.db.project.deleteMany({
         where: {
           id: {
             in: input,
           },
         },
       });
-
-      return result;
     }),
+  createCategory: protectedProcedure
+    .input(CategorySchema.omit({ id: true }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.category.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          iconName: input.iconName,
+        },
+      });
+    }),
+  readAllCategories: protectedProcedure.query(async ({ ctx }) => {
+    let results = await ctx.db.category.findMany();
+    if (results.length === 0) {
+      console.log("Loading sample categories");
+      results = await ctx.db.category.createManyAndReturn({
+        data: [
+          {
+            title: "Career",
+            iconName: "MdBusinessCenter",
+          },
+          {
+            title: "Chores",
+            iconName: "GiBroom",
+          },
+          {
+            title: "Entertainment",
+            iconName: "SiApplearcade",
+          },
+          {
+            title: "Finance",
+            iconName: "FaMoneyBills",
+          },
+          {
+            title: "Friends/Relationships",
+            iconName: "GiThreeFriends",
+          },
+          {
+            title: "Health/Fitness",
+            iconName: "GiBiceps",
+          },
+          {
+            title: "Home Improvements",
+            iconName: "LuConstruction",
+          },
+          {
+            title: "Mindfulness",
+            iconName: "RiMentalHealthFill",
+          },
+          {
+            title: "Periodic Maintenance",
+            iconName: "IoConstructSharp",
+          },
+        ],
+      });
+    }
+    return results;
+  }),
 } satisfies TRPCRouterRecord;

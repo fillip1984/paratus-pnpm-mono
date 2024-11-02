@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { api } from "~/trpc/react";
 
-export default function TodoDetails({
+export default function TaskDetails({
   params,
 }: {
   params: { id: number | "new" };
@@ -16,7 +16,7 @@ export default function TodoDetails({
 
   const id = params.id;
   const isNew = id === "new";
-  const { data: todo } = api.todo.readOne.useQuery(
+  const { data: task } = api.task.readOne.useQuery(
     {
       id: parseInt(id as string, 10),
     },
@@ -28,25 +28,25 @@ export default function TodoDetails({
   const [timer, setTimer] = useState("");
 
   useEffect(() => {
-    if (todo) {
-      setText(todo.text);
-      setComplete(todo.complete);
+    if (task) {
+      setText(task.text);
+      setComplete(task.complete);
       setTimer(
-        isNaN(todo.timer) || todo.timer === 0 ? "" : todo.timer.toString(),
+        isNaN(task.timer) || task.timer === 0 ? "" : task.timer.toString(),
       );
     }
-  }, [todo]);
+  }, [task]);
 
   const utils = api.useUtils();
-  const { mutate: createTodo } = api.todo.create.useMutation({
+  const { mutate: createTask } = api.task.create.useMutation({
     onSuccess: async () => {
-      await utils.todo.invalidate();
+      await utils.task.invalidate();
       void router.push("/");
     },
   });
-  const { mutate: updateTodo } = api.todo.update.useMutation({
+  const { mutate: updateTask } = api.task.update.useMutation({
     onSuccess: async () => {
-      await utils.todo.invalidate();
+      await utils.task.invalidate();
       void router.push("/");
     },
   });
@@ -58,10 +58,10 @@ export default function TodoDetails({
       newTimer = 0;
     }
     if (isNew) {
-      createTodo({ text, complete, timer: newTimer });
+      createTask({ text, complete, timer: newTimer });
     } else {
-      // TODO: There seems to be a bug that is forcing me to cast id to string then number to ensure it transmits as number
-      updateTodo({
+      // TASK: There seems to be a bug that is forcing me to cast id to string then number to ensure it transmits as number
+      updateTask({
         id: parseInt(id.toString(), 10),
         text,
         complete,
@@ -74,12 +74,11 @@ export default function TodoDetails({
     <main className="flex h-full w-full bg-black p-4">
       <form
         onSubmit={(e) => handleSubmit(e)}
-        className="flex w-full flex-col gap-4 rounded-lg bg-white/10 p-2"
-      >
+        className="flex w-full flex-col gap-4 rounded-lg bg-white/10 p-2">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Todo details..."
+          placeholder="Task details..."
         />
         <label className="flex items-center gap-2 text-white">
           <input
@@ -99,15 +98,13 @@ export default function TodoDetails({
         <div className="flex gap-2">
           <Link
             href="/"
-            className="rounded-lg border border-white px-4 py-2 text-white"
-          >
+            className="rounded-lg border border-white px-4 py-2 text-white">
             Cancel
           </Link>
           <button
             type="submit"
             className="rounded-lg bg-white px-4 py-2 text-xl text-black"
-            disabled={!text}
-          >
+            disabled={!text}>
             Save
           </button>
         </div>

@@ -1,11 +1,11 @@
 import { authRouter } from "./router/auth";
 import { projectRouter } from "./router/project";
-import { todoRouter } from "./router/todo";
+import { taskRouter } from "./router/task";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   auth: authRouter,
-  todo: todoRouter,
+  task: taskRouter,
   project: projectRouter,
 });
 

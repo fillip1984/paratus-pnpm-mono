@@ -5,28 +5,24 @@ import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import { BsPlus } from "react-icons/bs";
 
-import type { RouterOutputs } from "@acme/api";
-
 import { api } from "~/trpc/react";
 import TaskModal from "./_components/TaskModal";
 
-type Todo = RouterOutputs["todo"]["readAll"][number];
-
 export default function Timeline() {
-  const { data: todos } = api.todo.readAll.useQuery();
+  const { data: tasks } = api.task.readAll.useQuery();
 
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [editingTodo, setEditingTodo] = useState<Todo | undefined>();
+  const [editingTask, setEditingTask] = useState<Task | undefined>();
   const toggleTaskModal = () => {
     if (isTaskModalOpen) {
-      // clear out the todo that was being edited
-      setEditingTodo(undefined);
+      // clear out the task that was being edited
+      setEditingTask(undefined);
     }
     setIsTaskModalOpen((prev) => !prev);
   };
 
-  const handleEditTaskModal = (todo: Todo) => {
-    setEditingTodo(todo);
+  const handleEditTaskModal = (task: Task) => {
+    setEditingTask(task);
     setIsTaskModalOpen((prev) => !prev);
   };
 
@@ -35,7 +31,7 @@ export default function Timeline() {
       <div id="heading" className="mt-4 flex flex-col gap-2 p-2">
         <h3 className="flex">Today</h3>
         <span className="text-sm text-white/60">
-          {todos?.length ?? 0} tasks
+          {tasks?.length ?? 0} tasks
         </span>
       </div>
 
@@ -77,10 +73,10 @@ export default function Timeline() {
 
       <div className="flex h-full justify-center overflow-y-auto p-4">
         <div className="flex w-full max-w-[800px] flex-col">
-          {todos?.map((todo) => (
-            <TodoRow
-              key={todo.id}
-              todo={todo}
+          {tasks?.map((task) => (
+            <TaskRow
+              key={task.id}
+              task={task}
               handleEditTaskModal={handleEditTaskModal}
             />
           ))}
@@ -101,7 +97,7 @@ export default function Timeline() {
         {isTaskModalOpen && (
           <TaskModal
             toggleTaskModal={toggleTaskModal}
-            editingTodo={editingTodo}
+            editingTask={editingTask}
           />
         )}
       </AnimatePresence>
@@ -109,32 +105,32 @@ export default function Timeline() {
   );
 }
 
-const TodoRow = ({
-  todo,
+const TaskRow = ({
+  task,
   handleEditTaskModal,
 }: {
-  todo: Todo;
-  handleEditTaskModal: (todo: Todo) => void;
+  task: Task;
+  handleEditTaskModal: (task: Task) => void;
 }) => {
   return (
     <div
-      onClick={() => handleEditTaskModal(todo)}
+      onClick={() => handleEditTaskModal(task)}
       className="flex cursor-pointer gap-2 border-t border-t-white/50 py-2">
       <input type="checkbox" className="mt-1 rounded-full border-2" />
       <div className="flex w-full justify-between">
         <div className="flex flex-col">
-          <span className="font-bold">{todo.title}</span>
-          <span className="text-xs text-white/60">{todo.description}</span>
+          <span className="font-bold">{task.title}</span>
+          <span className="text-xs text-white/60">{task.description}</span>
           <div className="flex items-center gap-2">
             <span className="text-xs text-danger">
-              {todo.dueDate ? format(todo.dueDate, "yyyy-MM-dd hh:mm a") : ""}
+              {task.dueDate ? format(task.dueDate, "yyyy-MM-dd hh:mm a") : ""}
             </span>
-            <span className="text-xs text-danger">{todo.priority}</span>
+            <span className="text-xs text-danger">{task.priority}</span>
           </div>
         </div>
         <div className="flex items-end">
           <span className="text-xs">
-            {todo.project?.title ? todo.project.title : "Inbox"}
+            {task.project?.title ? task.project.title : "Inbox"}
           </span>
         </div>
       </div>

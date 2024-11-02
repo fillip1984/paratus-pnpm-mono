@@ -8,60 +8,60 @@ import { RiTimerLine } from "react-icons/ri";
 import { api } from "~/trpc/react";
 
 export default function Home() {
-  const { data: todos } = api.todo.readAll.useQuery();
+  const { data: tasks } = api.task.readAll.useQuery();
 
   const utils = api.useUtils();
   const queryClient = useQueryClient();
-  const { mutate: toggleTodo } = api.todo.update.useMutation({
+  const { mutate: toggleTask } = api.task.update.useMutation({
     // https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates
-    onMutate: async (newTodo) => {
+    onMutate: async (newTask) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await utils.todo.readAll.cancel();
+      await utils.task.readAll.cancel();
 
       // Snapshot the previous value
-      const previousTodos = utils.todo.readAll.getData();
+      const previousTasks = utils.task.readAll.getData();
 
       // Optimistically update to the new value
-      queryClient.setQueryData(["todos", newTodo.id], newTodo);
+      queryClient.setQueryData(["tasks", newTask.id], newTask);
 
-      // Return a context with the previous and new todo
-      return { previousTodos, newTodo };
+      // Return a context with the previous and new task
+      return { previousTasks, newTask };
     },
     // If the mutation fails, use the context we returned above
-    onError: (err, newTodo, context) => {
-      utils.todo.readAll.setData(undefined, context?.previousTodos);
+    onError: (err, newTask, context) => {
+      utils.task.readAll.setData(undefined, context?.previousTasks);
     },
     // Always refetch after error or success:
     onSettled: () => {
-      void utils.todo.readAll.invalidate();
+      void utils.task.readAll.invalidate();
     },
   });
 
-  const { mutate: deleteTodos } = api.todo.delete.useMutation({
-    onSettled: () => utils.todo.invalidate(),
+  const { mutate: deleteTasks } = api.task.delete.useMutation({
+    onSettled: () => utils.task.invalidate(),
   });
 
-  const handleToggleTodo = (todo: {
+  const handleToggleTask = (task: {
     id: number;
     text: string;
     complete: boolean;
     timer: number;
   }) => {
-    // console.log("togglin " + todo.id);
-    toggleTodo({ ...todo, complete: !todo.complete });
+    // console.log("togglin " + task.id);
+    toggleTask({ ...task, complete: !task.complete });
   };
 
   const handleDeleteComplete = () => {
-    const todosToDelete = todos?.filter((t) => t.complete).map((t) => t.id);
-    deleteTodos(todosToDelete ?? []);
+    const tasksToDelete = tasks?.filter((t) => t.complete).map((t) => t.id);
+    deleteTasks(tasksToDelete ?? []);
   };
 
   return (
     <main className="h-full w-full overflow-hidden bg-black text-white">
       <div id="heading" className="flex items-center gap-2 p-2">
-        <h3>Todos</h3>
-        <Link href="/todos/new" className="rounded-lg bg-white/30 p-2">
+        <h3>Tasks</h3>
+        <Link href="/tasks/new" className="rounded-lg bg-white/30 p-2">
           <BsPlusLg className="text-2xl" />
         </Link>
       </div>
@@ -72,7 +72,7 @@ export default function Home() {
           onClick={handleDeleteComplete}
           className="flex items-center gap-2 rounded-lg border p-2 text-danger"
           disabled={
-            todos?.filter((t) => t.complete).length === 0 ? true : false
+            tasks?.filter((t) => t.complete).length === 0 ? true : false
           }>
           <BsTrash className="text-xl" /> Completed
         </button>
@@ -80,31 +80,31 @@ export default function Home() {
 
       <div className="h-full overflow-auto pb-80">
         <div className="flex flex-col gap-2 p-4">
-          {todos?.length === 0 && (
+          {tasks?.length === 0 && (
             <div>
-              There are no todos... you can add a todo with the plus button
+              There are no tasks... you can add a task with the plus button
               above
             </div>
           )}
-          {todos?.map((todo) => (
+          {tasks?.map((task) => (
             <div
-              key={todo.id}
+              key={task.id}
               className="flex items-center gap-2 rounded-lg bg-white/30 p-2">
               <input
                 type="checkbox"
-                checked={todo.complete}
-                onChange={() => handleToggleTodo(todo)}
+                checked={task.complete}
+                onChange={() => handleToggleTask(task)}
                 className="rounded-md"
               />
-              <Link href={`/todos/${todo.id}`} className="flex w-full">
+              <Link href={`/tasks/${task.id}`} className="flex w-full">
                 <span
-                  className={`text-white ${todo.complete ? "line-through" : ""}`}>
-                  {todo.text}
+                  className={`text-white ${task.complete ? "line-through" : ""}`}>
+                  {task.text}
                 </span>
-                {todo.timer > 0 && (
+                {task.timer > 0 && (
                   <div className="ml-auto flex items-center gap-1">
                     <RiTimerLine className="text-2xl" />
-                    <span>{todo.timer} minutes</span>
+                    <span>{task.timer} minutes</span>
                   </div>
                 )}
               </Link>

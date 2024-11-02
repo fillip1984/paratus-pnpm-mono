@@ -29,12 +29,12 @@ export default function SideNav() {
             </span>
           </Link>
           {/* <Link
-            href="/todos"
+            href="/tasks"
             className="flex items-center gap-2 rounded-lg bg-white/30 p-2 transition hover:bg-white/50">
             <FaListCheck className="text-4xl text-white" />
             <span
               className={`${isMenuCollapsed ? "hidden" : ""} uppercase text-white`}>
-              Todos
+              Tasks
             </span>
           </Link>
           <Link
