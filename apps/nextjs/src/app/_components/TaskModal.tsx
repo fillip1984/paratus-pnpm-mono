@@ -17,13 +17,16 @@ import TextareaAutosize from "react-textarea-autosize";
 import { Popover } from "react-tiny-popover";
 import Toggle from "react-toggle";
 
+import type { Project } from "~/trpc/types";
+
 import "react-toggle/style.css";
+
+import { FaInbox } from "react-icons/fa6";
 
 import type { RouterOutputs } from "@acme/api";
 
 import { api } from "~/trpc/react";
-
-type Project = RouterOutputs["project"]["readAll"][number];
+import { categoryIconLookup } from "../utils/IconHelper";
 
 export default function TaskModal({
   toggleTaskModal,
@@ -135,7 +138,7 @@ export default function TaskModal({
     if (!editingTask) {
       throw Error("Unable to delete task, was not given a task to delete");
     }
-    removeTask([editingTask.id]);
+    removeTask({ id: editingTask.id });
   };
 
   return (
@@ -331,14 +334,20 @@ export default function TaskModal({
                   <div className="flex max-w-[300px] flex-col rounded border-white/30 bg-gray p-1 text-white">
                     <button
                       onClick={() => handleProject(undefined)}
-                      className="w-full text-left hover:bg-primary">
+                      className="flex w-full items-center gap-2 rounded p-1 text-left hover:bg-primary">
+                      <span className="text-3xl">
+                        <FaInbox />
+                      </span>
                       Inbox
                     </button>
                     {projects?.map((project) => (
                       <button
                         key={project.id}
                         onClick={() => handleProject(project)}
-                        className="w-full text-left hover:bg-primary">
+                        className="flex w-full items-center gap-2 rounded p-1 text-left hover:bg-primary">
+                        <span className="text-3xl">
+                          {categoryIconLookup(project.category)}
+                        </span>
                         {project.title}
                       </button>
                     ))}
@@ -347,7 +356,21 @@ export default function TaskModal({
                 <button
                   onClick={() => setIsProjectPickerOpen((prev) => !prev)}
                   className="rounded border bg-white/50 px-1">
-                  {project ? project.title : "Inbox"}
+                  {project ? (
+                    <div className="flex items-center gap-2 p-1">
+                      <span className="text-3xl">
+                        {categoryIconLookup(project.category)}
+                      </span>
+                      <span>{project.title}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 p-1">
+                      <span className="text-3xl">
+                        <FaInbox />
+                      </span>
+                      Inbox
+                    </div>
+                  )}
                 </button>
               </Popover>
               <div className="flex gap-2">

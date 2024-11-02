@@ -15,7 +15,7 @@ const TaskSchema = PersistedSchema.extend({
 
 export const taskRouter = {
   create: protectedProcedure
-    .input(TaskSchema)
+    .input(TaskSchema.omit({ id: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.task.create({
         data: {

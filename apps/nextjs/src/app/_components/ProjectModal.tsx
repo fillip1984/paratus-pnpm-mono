@@ -118,7 +118,7 @@ export default function ProjectModal({
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="modal z-[991] min-w-[75%] rounded border border-gray bg-black shadow-lg shadow-black">
+          className="modal z-[991] max-w-[800px] rounded border border-gray bg-black shadow-lg shadow-black">
           <div className="flex gap-2">
             <div className="flex flex-col items-center gap-2 border-r border-r-gray p-2">
               <Popover
