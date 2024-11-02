@@ -22,7 +22,7 @@ export default function Projects() {
   };
 
   return (
-    <main className="flex h-full w-full flex-col items-center overflow-hidden bg-black text-white">
+    <main className="flex h-full w-full flex-col items-center overflow-hidden bg-background text-white">
       <div id="heading" className="flex items-center gap-2 p-2">
         <h3>Projects</h3>
       </div>
