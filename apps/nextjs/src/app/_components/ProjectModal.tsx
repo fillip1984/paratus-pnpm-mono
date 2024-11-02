@@ -34,15 +34,11 @@ export default function ProjectModal({
       setCategory(undefined);
     } else {
       const possible = categories.find((category) =>
-        category.title
-          .toLocaleLowerCase()
-          .startsWith(title.toLocaleLowerCase()),
+        category.title.toLocaleLowerCase().includes(title.toLocaleLowerCase()),
       );
 
       if (possible) {
         setCategory(possible);
-      } else {
-        setCategory(undefined);
       }
     }
   }, [title, categories]);
@@ -51,6 +47,7 @@ export default function ProjectModal({
     if (editingProject) {
       setTitle(editingProject.title);
       setDescription(editingProject.description ?? "");
+      setCategory(editingProject.category);
     }
   }, [editingProject]);
 

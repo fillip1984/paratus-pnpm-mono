@@ -66,6 +66,7 @@ export const projectRouter = {
         data: {
           title: input.title,
           description: input.description,
+          categoryId: input.category.id,
           createdById: ctx.session.user.id,
         },
       });

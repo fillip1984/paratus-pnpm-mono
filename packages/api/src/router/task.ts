@@ -44,6 +44,13 @@ export const taskRouter = {
           select: {
             id: true,
             title: true,
+            category: {
+              select: {
+                id: true,
+                title: true,
+                iconName: true,
+              },
+            },
           },
         },
       },
